@@ -1,0 +1,105 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="100" y1="50" x2="700" y2="550">
+      <stop stop-color="#E0F8EC"></stop>
+      <stop offset="1" stop-color="#B9EBD5"></stop>
+    </linearGradient>
+    <linearGradient id="phone" x1="350" y1="70" x2="540" y2="550">
+      <stop stop-color="#193D3A"></stop>
+      <stop offset="1" stop-color="#092B29"></stop>
+    </linearGradient>
+    <linearGradient id="wallet" x1="80" y1="350" x2="300" y2="540">
+      <stop stop-color="#087F5B"></stop>
+      <stop offset="1" stop-color="#064E3B"></stop>
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="12" flood-color="#064E3B" flood-opacity=".18"></feDropShadow>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect x="20" y="20" width="760" height="560" rx="45" fill="url(#bg)"></rect>
+  <circle cx="400" cy="280" r="220" fill="#FFFFFF" opacity=".35"></circle>
+
+  <!-- Decorative chart -->
+  <circle cx="145" cy="170" r="65" fill="#10B981"></circle>
+  <path d="M145 105 A65 65 0 0 1 210 170 H145Z" fill="#047857"></path>
+  <path d="M145 170 L210 170 A65 65 0 0 1 99 216Z" fill="#34D399"></path>
+
+  <!-- Growth chart -->
+  <path d="M615 190 L650 155 L675 175 L725 115" stroke="#059669" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"></path>
+  <path d="M700 115 H725 V140" stroke="#059669" stroke-width="10" stroke-linecap="round"></path>
+
+  <!-- Phone -->
+  <g filter="url(#shadow)">
+    <rect x="290" y="55" width="300" height="490" rx="38" fill="url(#phone)"></rect>
+    <rect x="302" y="68" width="276" height="464" rx="29" fill="#FFFFFF"></rect>
+    <rect x="390" y="78" width="90" height="8" rx="4" fill="#CBD5E1"></rect>
+  </g>
+
+  <!-- Phone heading -->
+  <text x="325" y="135" font-size="22" font-weight="bold" fill="#102F2B">My Expenses</text>
+  <circle cx="540" cy="125" r="15" fill="#D1FAE5"></circle>
+  <circle cx="540" cy="125" r="6" fill="#059669"></circle>
+
+  <!-- Balance card -->
+  <rect x="320" y="155" width="236" height="105" rx="18" fill="#D1FAE5"></rect>
+  <text x="340" y="185" font-size="13" fill="#47756A">
+    Total Balance
+  </text>
+  <text x="340" y="222" font-size="30" font-weight="bold" fill="#064E3B">₹25,850</text>
+  <path d="M505 205 L520 190 L535 200" stroke="#059669" stroke-width="4" stroke-linecap="round"></path>
+
+  <!-- Chart heading -->
+  <text x="322" y="295" font-size="16" font-weight="bold" fill="#164E3B">Monthly Overview</text>
+
+  <!-- Bar chart -->
+  <g fill="#10B981">
+    <rect x="335" y="370" width="22" height="65" rx="5"></rect>
+    <rect x="370" y="345" width="22" height="90" rx="5"></rect>
+    <rect x="405" y="320" width="22" height="115" rx="5"></rect>
+    <rect x="440" y="355" width="22" height="80" rx="5"></rect>
+    <rect x="475" y="300" width="22" height="135" rx="5"></rect>
+    <rect x="510" y="335" width="22" height="100" rx="5"></rect>
+  </g>
+  <path d="M325 438 H545" stroke="#D1D5DB" stroke-width="2"></path>
+
+  <!-- Transaction section -->
+  <text x="322" y="468" font-size="15" font-weight="bold" fill="#164E3B">Recent Expenses</text>
+  <circle cx="340" cy="495" r="12" fill="#D1FAE5"></circle>
+  <text x="360" y="500" font-size="12" fill="#334155">Food</text>
+  <text x="530" y="500" font-size="12" text-anchor="end" fill="#EF4444">-₹450</text>
+
+  <!-- Wallet -->
+  <g filter="url(#shadow)">
+    <rect x="55" y="350" width="255" height="165" rx="24" fill="url(#wallet)"></rect>
+    <rect x="185" y="405" width="140" height="72" rx="18" fill="#065F46"></rect>
+    <circle cx="220" cy="441" r="15" fill="#FBBF24"></circle>
+    <circle cx="220" cy="441" r="9" fill="#FDE68A"></circle>
+  </g>
+
+  <!-- Money -->
+  <rect x="85" y="310" width="125" height="65" rx="8" transform="rotate(-12 85 310)" fill="#86EFAC"></rect>
+  <rect x="105" y="320" width="125" height="65" rx="8" transform="rotate(-12 105 320)" fill="#4ADE80"></rect>
+  <circle cx="170" cy="340" r="20" fill="#059669"></circle>
+  <text x="170" y="349" font-size="23" text-anchor="middle" fill="white">₹</text>
+
+  <!-- Coins -->
+  <ellipse cx="125" cy="520" rx="45" ry="13" fill="#F59E0B"></ellipse>
+  <rect x="80" y="495" width="90" height="25" fill="#FBBF24"></rect>
+  <ellipse cx="125" cy="495" rx="45" ry="13" fill="#FDE68A"></ellipse>
+  <ellipse cx="125" cy="495" rx="32" ry="7" fill="#FBBF24"></ellipse>
+
+  <ellipse cx="215" cy="530" rx="38" ry="11" fill="#F59E0B"></ellipse>
+  <rect x="177" y="510" width="76" height="20" fill="#FBBF24"></rect>
+  <ellipse cx="215" cy="510" rx="38" ry="11" fill="#FDE68A"></ellipse>
+  <text x="215" y="523" text-anchor="middle" font-size="22" font-weight="bold" fill="#B45309">₹</text>
+
+  <!-- Plant -->
+  <path d="M660 470 Q650 390 690 345 Q710 400 660 470" fill="#059669"></path>
+  <path d="M660 450 Q615 390 585 410 Q605 460 660 450" fill="#10B981"></path>
+  <path d="M660 470 V530" stroke="#047857" stroke-width="6"></path>
+  <path d="M625 530 H695 L685 575 H635Z" fill="#FFFFFF"></path>
+  <path d="M625 530 H695" stroke="#D1D5DB" stroke-width="5"></path>
+</svg>
