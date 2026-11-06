@@ -239,14 +239,15 @@ export const DashboardLayout = ({ initialTab = 'dashboard' }) => {
 
           <button
             type="button"
-            className="nav-item-btn"
+            className="nav-item-btn nav-btn-add"
             onClick={() => {
               setEditingExpense(null);
               setIsModalOpen(true);
             }}
           >
             <PlusCircleIcon size={17} />
-            <span>Add Expense</span>
+            <span className="desktop-nav-text">Add Expense</span>
+            <span className="mobile-nav-text">Add</span>
           </button>
 
           <button
@@ -255,7 +256,8 @@ export const DashboardLayout = ({ initialTab = 'dashboard' }) => {
             onClick={() => switchTab('expenses')}
           >
             <ExpensesListIcon size={17} />
-            <span>My Expenses</span>
+            <span className="desktop-nav-text">My Expenses</span>
+            <span className="mobile-nav-text">Expenses</span>
           </button>
 
           <button

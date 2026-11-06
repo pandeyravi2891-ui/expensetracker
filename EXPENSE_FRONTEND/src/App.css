@@ -2164,3 +2164,525 @@
 .modal-btn-submit:hover {
   background: #059669;
 }
+
+/* ============================================================
+   MOBILE RESPONSIVENESS & ADAPTIVE LAYOUT
+   ============================================================ */
+
+/* Text Visibility helper for bottom mobile navbar vs desktop */
+.mobile-nav-text {
+  display: none;
+}
+
+.desktop-nav-text {
+  display: inline;
+}
+
+/* 1. TABLET SCREENS (max-width: 900px) */
+@media (max-width: 900px) {
+  .dash-app-window {
+    max-width: 98%;
+    height: calc(100vh - 20px);
+    max-height: 680px;
+  }
+
+  .dash-sidebar {
+    width: 185px;
+    padding: 16px 10px 14px 10px;
+  }
+
+  .dash-main-workspace {
+    padding: 18px 20px 16px 20px;
+  }
+
+  .summary-cards-grid {
+    gap: 8px;
+  }
+
+  .stat-card {
+    padding: 10px 10px;
+  }
+
+  .stat-card-value {
+    font-size: 16px;
+  }
+}
+
+/* 2. MOBILE SCREENS & COMPACT TABLETS (max-width: 768px) */
+@media (max-width: 768px) {
+  /* Allow normal vertical scrolling on mobile */
+  .auth-page-wrapper {
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px 10px 80px 10px;
+    justify-content: flex-start;
+  }
+
+  .auth-content-container {
+    width: 100%;
+    max-height: none;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .bg-wave-left,
+  .bg-wave-right {
+    opacity: 0.25;
+    width: 75vw;
+  }
+
+  /* Auth Cards on Mobile */
+  .auth-card {
+    max-width: 100%;
+    width: 100%;
+    padding: 22px 18px 18px 18px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  }
+
+  .name-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  /* Password Reset Split Card stacks vertically on mobile */
+  .split-auth-card {
+    flex-direction: column;
+    max-width: 100%;
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  }
+
+  .brand-panel {
+    width: 100%;
+    padding: 18px 16px;
+    border-right: none;
+    border-bottom: 1px solid rgba(16, 185, 129, 0.12);
+  }
+
+  .brand-name {
+    font-size: 22px;
+  }
+
+  .split-form-panel {
+    width: 100%;
+    padding: 20px 18px 20px 18px;
+  }
+
+  /* Dashboard App Container on Mobile */
+  .dash-app-window {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    min-height: auto;
+    max-height: none;
+    border-radius: 20px;
+    flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    overflow: visible;
+  }
+
+  /* Sidebar adapts: Top Brand Bar + Fixed Bottom Nav */
+  .dash-sidebar {
+    width: 100%;
+    padding: 0;
+    background: transparent;
+    flex-direction: column;
+    flex-shrink: 0;
+  }
+
+  .dash-sidebar-brand {
+    width: 100%;
+    background: #032b1d;
+    padding: 12px 16px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+  }
+
+  .dash-sidebar-footer {
+    display: none;
+  }
+
+  /* Fixed Bottom Navigation Bar for Mobile */
+  .dash-sidebar-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 60px;
+    background: #032b1d;
+    z-index: 9999;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 4px 6px env(safe-area-inset-bottom, 4px) 6px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.25);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    box-sizing: border-box;
+  }
+
+  .nav-item-btn {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 6px 3px;
+    font-size: 10px;
+    font-weight: 600;
+    border-radius: 8px;
+    color: #94a3b8;
+    background: transparent;
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    width: auto;
+  }
+
+  .nav-item-btn svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .nav-item-btn.active {
+    background: rgba(16, 185, 129, 0.22);
+    color: #10b981;
+    box-shadow: none;
+  }
+
+  .nav-item-btn.logout {
+    margin-top: 0;
+    color: #f87171;
+  }
+
+  .mobile-nav-text {
+    display: inline;
+  }
+
+  .desktop-nav-text {
+    display: none;
+  }
+
+  /* Main Workspace */
+  .dash-main-workspace {
+    width: 100%;
+    padding: 16px 14px 24px 14px;
+    overflow-y: visible;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    box-sizing: border-box;
+  }
+
+  .dash-view-header {
+    margin-bottom: 12px;
+  }
+
+  .dash-view-title {
+    font-size: 19px;
+  }
+
+  .dash-view-subtitle {
+    font-size: 12px;
+  }
+
+  /* Dashboard Overview: 2 columns grid on phones */
+  .summary-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .stat-card {
+    padding: 10px 12px;
+    border-radius: 12px;
+  }
+
+  .stat-card-value {
+    font-size: 17px;
+  }
+
+  /* Stack charts vertically on mobile */
+  .charts-grid-row {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .chart-card {
+    padding: 14px 14px;
+    border-radius: 14px;
+  }
+
+  /* Expenses List Mobile */
+  .expenses-top-actions {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .search-bar-wrapper {
+    flex: 1;
+    width: auto;
+    padding: 4px 10px;
+  }
+
+  .search-input {
+    width: 100%;
+    font-size: 12px;
+  }
+
+  .btn-add-expense {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 5px 12px;
+    font-size: 12px;
+  }
+
+  .category-filter-pills {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+    scrollbar-width: none;
+    gap: 6px;
+  }
+
+  .category-filter-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cat-pill-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 4px 10px;
+    font-size: 11.5px;
+  }
+
+  .expenses-list-card {
+    max-height: none;
+    overflow-y: visible;
+    gap: 8px;
+    padding-right: 0;
+  }
+
+  .expense-row-item {
+    padding: 8px 10px;
+    border-radius: 10px;
+  }
+
+  .exp-title {
+    font-size: 13px;
+  }
+
+  .exp-date {
+    font-size: 10.5px;
+  }
+
+  .exp-amount {
+    font-size: 13px;
+    margin-right: 10px;
+    min-width: 50px;
+  }
+
+  /* Profile View Mobile */
+  .profile-top-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .profile-main-card,
+  .profile-quick-actions-card {
+    border-radius: 14px;
+    padding: 14px 16px;
+  }
+
+  .stats-three-cols {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .single-stat-col {
+    padding: 8px 4px;
+  }
+
+  .stat-big-number {
+    font-size: 14.5px;
+  }
+
+  .stat-desc-label {
+    font-size: 10.5px;
+  }
+
+  /* Edit Profile View Mobile */
+  .edit-profile-card {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 18px 14px;
+  }
+
+  .edit-avatar-col {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #f1f5f9;
+    padding-right: 0;
+    padding-bottom: 14px;
+  }
+
+  .edit-form-col {
+    width: 100%;
+  }
+
+  .edit-actions-row {
+    gap: 10px;
+  }
+
+  .btn-cancel-edit,
+  .btn-save-edit {
+    flex: 1;
+    text-align: center;
+  }
+
+  /* Modal on Mobile */
+  .modal-card {
+    width: 95%;
+    max-width: 95%;
+    padding: 18px 16px;
+    border-radius: 16px;
+    margin: auto;
+  }
+
+  .modal-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+/* 3. COMPACT PHONES (max-width: 480px) */
+@media (max-width: 480px) {
+  .dash-view-title {
+    font-size: 18px;
+  }
+
+  .summary-cards-grid {
+    gap: 8px;
+  }
+
+  .stat-card {
+    padding: 8px 10px;
+  }
+
+  .stat-card-value {
+    font-size: 15.5px;
+  }
+
+  .stat-card-label {
+    font-size: 10.5px;
+  }
+
+  /* Donut chart legend 2 columns on small screens */
+  .donut-chart-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .donut-svg-wrapper {
+    width: 100px;
+    height: 100px;
+  }
+
+  .donut-legend-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    gap: 6px 12px;
+  }
+
+  /* OTP Boxes fit perfectly on small phones */
+  .otp-inputs-container {
+    gap: 5px;
+  }
+
+  .otp-digit-input,
+  .otp-square-box {
+    width: 38px;
+    height: 44px;
+    font-size: 18px;
+    border-radius: 8px;
+  }
+
+  /* Expense list row on small phones */
+  .expense-row-item {
+    padding: 7px 8px;
+  }
+
+  .exp-icon-circle {
+    width: 26px;
+    height: 26px;
+    margin-right: 8px;
+  }
+
+  .exp-title {
+    font-size: 12.5px;
+  }
+
+  .exp-cat-badge {
+    padding: 2px 6px;
+    font-size: 9.5px;
+  }
+
+  .exp-category-col {
+    margin-right: 6px;
+  }
+
+  .exp-amount {
+    font-size: 12px;
+    margin-right: 6px;
+    min-width: auto;
+  }
+
+  .btn-action {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* 4. ULTRA COMPACT PHONES (max-width: 360px) */
+@media (max-width: 360px) {
+  .otp-digit-input,
+  .otp-square-box {
+    width: 34px;
+    height: 40px;
+    font-size: 16px;
+    gap: 4px;
+  }
+
+  .stat-card-value {
+    font-size: 14.5px;
+  }
+
+  .single-stat-col .stat-big-number {
+    font-size: 13px;
+  }
+
+  .nav-item-btn {
+    padding: 5px 2px;
+    font-size: 9px;
+  }
+
+  .nav-item-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+}
+
