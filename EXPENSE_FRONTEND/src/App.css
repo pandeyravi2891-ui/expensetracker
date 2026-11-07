@@ -1019,7 +1019,7 @@
   background: #ffffff;
   border-radius: 28px;
   display: flex;
-  overflow: hidden;
+  /* overflow: hidden; */
   box-shadow: 
     0 24px 48px -12px rgba(6, 78, 59, 0.16),
     0 10px 24px -8px rgba(0, 0, 0, 0.05),
