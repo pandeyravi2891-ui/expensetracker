@@ -22,12 +22,25 @@ app.use(cookieParser());
 const {connect} = require("./Config/database");
 connect();
 
+const fs = require("fs");
+const path = require("path");
+
 const user = require("./Routes/route");
 app.use("/api/v1" , user);
 
-app.get("/", (req, res) => {
-    res.send("<h1>backend API is running</h1>");
-});
+// Serve frontend build if available, supporting React Router refresh on any route
+const frontendDist = path.join(__dirname, "../EXPENSE_FRONTEND/dist");
+if (fs.existsSync(frontendDist)) {
+    app.use(express.static(frontendDist));
+    app.get("*", (req, res, next) => {
+        if (req.path.startsWith("/api/")) return next();
+        res.sendFile(path.join(frontendDist, "index.html"));
+    });
+} else {
+    app.get("/", (req, res) => {
+        res.send("<h1>backend API is running</h1>");
+    });
+}
 
 // Global error handler
 app.use((err, req, res, next) => {

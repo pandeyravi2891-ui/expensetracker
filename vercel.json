@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/EXPENSE_FRONTEND/dist/index.html"
+    }
+  ]
+}
+
