@@ -99,22 +99,29 @@ export const DashboardLayout = ({ initialTab = 'dashboard' }) => {
     fetchProfile();
   }, [user?.email]);
 
-  // Fetch expenses from backend on mount
+  // Fetch expenses from backend on mount and whenever user email updates
   useEffect(() => {
     const fetchFromBackend = async () => {
+      const currentEmail = user?.email?.trim();
+      if (!currentEmail) return;
+
       try {
         const API_URL = import.meta.env.VITE_API_URL;
-        const response = await fetch(`${API_URL}/api/v1/fetch_expense?email=${encodeURIComponent(user.email)}`);
+        const response = await fetch(`${API_URL}/api/v1/fetch_expense?email=${encodeURIComponent(currentEmail)}`);
         const data = await response.json();
-        if (response.ok && data.success && data.expenses?.length > 0) {
-          setExpenses(data.expenses);
+        if (response.ok && data.success && Array.isArray(data.expenses)) {
+          // Keep only expenses that strictly match the current user's email
+          const matchingExpenses = data.expenses.filter((exp) =>
+            !exp.email || exp.email.trim().toLowerCase() === currentEmail.toLowerCase()
+          );
+          setExpenses(matchingExpenses);
         }
       } catch (err) {
         console.warn('Backend not reached, using local data:', err);
       }
     };
     fetchFromBackend();
-  }, [user.email]);
+  }, [user?.email]);
 
   // Handle Save (Add or Update)
   const handleSaveExpense = async (expenseData) => {
@@ -142,14 +149,17 @@ export const DashboardLayout = ({ initialTab = 'dashboard' }) => {
       );
     } else {
       // Add new
+      const currentEmail = user?.email?.trim().toLowerCase();
       let newId = Date.now().toString();
+      let createdExpense = null;
+
       try {
         const API_URL = import.meta.env.VITE_API_URL;
         const response = await fetch(`${API_URL}/api/v1/expense_add`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            email: user.email,
+            email: currentEmail,
             amount,
             category,
             date,
@@ -159,14 +169,16 @@ export const DashboardLayout = ({ initialTab = 'dashboard' }) => {
         const data = await response.json();
         if (data.expense?._id) {
           newId = data.expense._id;
+          createdExpense = data.expense;
         }
       } catch (err) {
         console.warn('Backend add failed, saving locally:', err);
       }
 
-      const newItem = {
+      const newItem = createdExpense || {
         id: newId,
         _id: newId,
+        email: currentEmail,
         description,
         amount,
         category,
@@ -303,6 +315,7 @@ export const DashboardLayout = ({ initialTab = 'dashboard' }) => {
         {activeTab === 'expenses' && (
           <ExpensesList
             expenses={expenses}
+            userEmail={user?.email}
             onAddClick={() => {
               setEditingExpense(null);
               setIsModalOpen(true);

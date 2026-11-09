@@ -32,10 +32,9 @@ app.use("/api/v1" , user);
 const frontendDist = path.join(__dirname, "../EXPENSE_FRONTEND/dist");
 if (fs.existsSync(frontendDist)) {
     app.use(express.static(frontendDist));
-    app.get("*", (req, res, next) => {
-        if (req.path.startsWith("/api/")) return next();
-        res.sendFile(path.join(frontendDist, "index.html"));
-    });
+  app.get("/{*splat}", (req, res) => {
+    res.sendFile(path.join(frontendDist, "index.html"));
+});
 } else {
     app.get("/", (req, res) => {
         res.send("<h1>backend API is running</h1>");

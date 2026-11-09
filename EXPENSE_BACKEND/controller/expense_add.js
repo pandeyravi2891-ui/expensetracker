@@ -11,8 +11,10 @@ const expenseadd = async(req,res) =>{
             });
         }
 
+        const normalizedEmail = email.trim().toLowerCase();
+
         const newExpense = await Expense.create({
-            email,
+            email: normalizedEmail,
             amount: Number(amount),
             category,
             date: new Date(date),

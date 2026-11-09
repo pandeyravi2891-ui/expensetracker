@@ -12,6 +12,7 @@ import {
 
 export const ExpensesList = ({
   expenses = [],
+  userEmail = '',
   onAddClick,
   onEditClick,
   onDeleteClick,
@@ -48,17 +49,26 @@ export const ExpensesList = ({
     }
   };
 
-  // Filter expenses by search query and category
-  const filteredExpenses = expenses.filter((item) => {
-    const matchesCategory =
-      selectedCategory === 'All' ||
-      item.category?.toLowerCase() === selectedCategory.toLowerCase();
-    const matchesSearch =
-      !searchQuery.trim() ||
-      item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.category?.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
+  // Filter expenses:
+  // 1. Only show expenses where email matches current logged-in user
+  // 2. Filter by category and search query
+  const filteredExpenses = expenses
+    .filter((item) => {
+      if (item.email && userEmail) {
+        return item.email.trim().toLowerCase() === userEmail.trim().toLowerCase();
+      }
+      return true;
+    })
+    .filter((item) => {
+      const matchesCategory =
+        selectedCategory === 'All' ||
+        item.category?.toLowerCase() === selectedCategory.toLowerCase();
+      const matchesSearch =
+        !searchQuery.trim() ||
+        item.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.category?.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
+    });
 
   return (
     <div className="dash-view-container">

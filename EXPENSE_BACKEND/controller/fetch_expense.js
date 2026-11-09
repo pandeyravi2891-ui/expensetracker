@@ -11,11 +11,18 @@ const fetchexpense = async(req,res) =>{
             });
         }
 
-        const expenses = await Expense.find({ email }).sort({ date: -1 });
+        const cleanEmail = email.trim();
+        const escapedEmail = cleanEmail.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+        // Find all expenses from DB matching the email (case-insensitive)
+        const expenses = await Expense.find({
+            email: { $regex: new RegExp(`^${escapedEmail}$`, "i") }
+        }).sort({ date: -1 });
 
         return res.status(200).json({
             success: true,
             message: "Expenses fetched successfully",
+            count: expenses.length,
             expenses
         });
     }catch(err){
