@@ -49,17 +49,16 @@ const user = async(req,res) =>{
             maxAge: 24 * 60 * 60 * 1000
         });
 
-        // await User.create({
-        //     firstName,
-        //     lastName,
-        //     email,
-        //     password : hashedPassword,
-        //     confirm_password : hashedconfirm_password,
-        //     token
-        // })
+       
 
         const otp = crypto.randomInt(100000, 1000000).toString();
         const otpHash = await bcrypt.hash(otp,10);
+
+        const otpdb = await OTP.find({email}); 
+
+        if(otpdb){
+            await OTP.deleteMany({email});
+        }
 
         await OTP.create({
             otpHash : otpHash,
