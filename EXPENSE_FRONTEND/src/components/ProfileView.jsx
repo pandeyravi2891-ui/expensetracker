@@ -41,6 +41,7 @@ export const ProfileView = ({ user = null, expenses = [], totalExpenses = 0, onE
       if (response.ok && data.success) {
         localStorage.removeItem('expense_token');
         localStorage.removeItem('expense_user');
+        localStorage.removeItem('is_logged_in');
         localStorage.removeItem('expense_items');
         alert(data.message || 'Account deleted successfully.');
         navigate('/signup', { replace: true });
@@ -48,6 +49,7 @@ export const ProfileView = ({ user = null, expenses = [], totalExpenses = 0, onE
         if (data.message === 'User not found.') {
           localStorage.removeItem('expense_token');
           localStorage.removeItem('expense_user');
+          localStorage.removeItem('is_logged_in');
           localStorage.removeItem('expense_items');
           alert('Local session and data cleared.');
           navigate('/signup', { replace: true });

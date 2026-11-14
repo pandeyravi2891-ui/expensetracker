@@ -159,6 +159,10 @@ export const AuthCard = ({
             bio: data.user?.bio || ''
           };
           localStorage.setItem('expense_user', JSON.stringify(userObj));
+          localStorage.setItem('is_logged_in', 'true');
+          if (data.token) {
+            localStorage.setItem('expense_token', data.token);
+          }
           setFeedback({
             type: 'success',
             message: data.message || 'Login successful! Welcome back.',

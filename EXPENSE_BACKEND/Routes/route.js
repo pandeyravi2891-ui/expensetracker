@@ -2,7 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
-const {user,login,logout} = require("../controller/user");
+const {user,login,logout,checkAuth} = require("../controller/user");
 const {otpverify} = require("../controller/otpVerification");
 const {forgotpassotp} = require("../controller/forgotpasswordotp");
 const {resetotpverify} = require("../controller/resetotpverification");
@@ -21,6 +21,8 @@ router.post("/otp_verify",otpverify);
 router.post("/login",login);
 router.post("/logout",logout);
 router.get("/logout",logout);
+router.get("/check-auth",checkAuth);
+router.post("/check-auth",checkAuth);
 router.post("/password_reset",forgotpassotp);
 router.post("/resetotp_verify",resetotpverify);
 router.post("/resetpass",resetpass);

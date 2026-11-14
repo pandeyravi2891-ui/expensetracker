@@ -182,4 +182,44 @@ const logout = async (req, res) => {
     }
 };
 
-module.exports = { user, login, logout };
+const checkAuth = async (req, res) => {
+    try {
+        const { getUserFromReq } = require("../middleware/auth");
+        const authUser = getUserFromReq(req);
+
+        if (!authUser) {
+            return res.status(401).json({
+                success: false,
+                message: "No active session found."
+            });
+        }
+
+        const foundUser = (authUser.id ? await User.findById(authUser.id) : null) ||
+                          (authUser.email ? await User.findOne({ email: authUser.email }) : null);
+
+        if (!foundUser) {
+            return res.status(401).json({
+                success: false,
+                message: "User session expired or user not found."
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            user: {
+                firstName: foundUser.firstName,
+                lastName: foundUser.lastName,
+                email: foundUser.email,
+                profileImage: foundUser.profileImage || "",
+                bio: foundUser.bio || ""
+            }
+        });
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+};
+
+module.exports = { user, login, logout, checkAuth };

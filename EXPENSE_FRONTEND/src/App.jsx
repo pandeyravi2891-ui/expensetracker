@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthCard } from './components/AuthCard';
 import { OtpSentCard } from './components/OtpSentCard';
@@ -9,6 +9,37 @@ import { ResetOtpVerifyCard } from './components/ResetOtpVerifyCard';
 import { ResetPasswordCard } from './components/ResetPasswordCard';
 import { DashboardLayout } from './components/DashboardLayout';
 import './App.css';
+
+// Helper to determine if user has an active session
+function checkIsLoggedIn() {
+  try {
+    const isLogged = localStorage.getItem('is_logged_in');
+    const token = localStorage.getItem('expense_token');
+    const userStr = localStorage.getItem('expense_user');
+    if (isLogged === 'true') return true;
+    if (token) return true;
+    if (userStr) {
+      const parsed = JSON.parse(userStr);
+      if (parsed && parsed.email) return true;
+    }
+    return false;
+  } catch {
+    return false;
+  }
+}
+
+// Route guards
+function HomeRoute() {
+  return checkIsLoggedIn() ? <Navigate to="/dashboard" replace /> : <AuthCard mode="signup" theme="green" forceSocial={true} />;
+}
+
+function PublicAuthRoute({ mode }) {
+  return checkIsLoggedIn() ? <Navigate to="/dashboard" replace /> : <AuthCard mode={mode} theme="green" forceSocial={true} />;
+}
+
+function ProtectedRoute({ initialTab }) {
+  return checkIsLoggedIn() ? <DashboardLayout initialTab={initialTab} /> : <Navigate to="/login" replace />;
+}
 
 // Background Waves
 function BackgroundWaves() {
@@ -62,6 +93,35 @@ function BackgroundWaves() {
 }
 
 function App() {
+  const [, setAuthState] = useState(checkIsLoggedIn());
+
+  // Check and sync session with backend cookies on mount
+  useEffect(() => {
+    const verifySession = async () => {
+      try {
+        const API_URL = import.meta.env.VITE_API_URL;
+        const res = await fetch(`${API_URL}/api/v1/check-auth`, {
+          credentials: 'include'
+        });
+        const data = await res.json();
+        if (res.ok && data.success && data.user) {
+          const userObj = {
+            name: `${data.user.firstName} ${data.user.lastName}`.trim(),
+            email: data.user.email,
+            profileImage: data.user.profileImage || '',
+            bio: data.user.bio || ''
+          };
+          localStorage.setItem('expense_user', JSON.stringify(userObj));
+          localStorage.setItem('is_logged_in', 'true');
+          setAuthState(true);
+        }
+      } catch (err) {
+        // Retain local session if offline or backend starting up
+      }
+    };
+    verifySession();
+  }, []);
+
   return (
     <BrowserRouter>
       <div className="auth-page-wrapper">
@@ -69,10 +129,10 @@ function App() {
 
         <div className="auth-content-container">
           <Routes>
-            {/* 1. Main Auth: Login & Signup */}
-            <Route path="/" element={<AuthCard mode="signup" theme="green" forceSocial={true} />} />
-            <Route path="/signup" element={<AuthCard mode="signup" theme="green" forceSocial={true} />} />
-            <Route path="/login" element={<AuthCard mode="login" theme="green" forceSocial={true} />} />
+            {/* 1. Main Auth: Automatic redirect to Dashboard if already logged in */}
+            <Route path="/" element={<HomeRoute />} />
+            <Route path="/signup" element={<PublicAuthRoute mode="signup" />} />
+            <Route path="/login" element={<PublicAuthRoute mode="login" />} />
 
             {/* 2. Signup OTP Flow */}
             <Route path="/otp-sent" element={<OtpSentCard />} />
@@ -84,13 +144,13 @@ function App() {
             <Route path="/forgot-password/verify-otp" element={<ResetOtpVerifyCard />} />
             <Route path="/reset-password" element={<ResetPasswordCard />} />
 
-            {/* 4. Complete Dashboard Flow (Matching the new 4 screens!) */}
-            <Route path="/dashboard" element={<DashboardLayout initialTab="dashboard" />} />
-            <Route path="/dashboard/expenses" element={<DashboardLayout initialTab="expenses" />} />
-            <Route path="/dashboard/profile" element={<DashboardLayout initialTab="profile" />} />
-            <Route path="/dashboard/edit-profile" element={<DashboardLayout initialTab="edit-profile" />} />
+            {/* 4. Protected Dashboard Routes */}
+            <Route path="/dashboard" element={<ProtectedRoute initialTab="dashboard" />} />
+            <Route path="/dashboard/expenses" element={<ProtectedRoute initialTab="expenses" />} />
+            <Route path="/dashboard/profile" element={<ProtectedRoute initialTab="profile" />} />
+            <Route path="/dashboard/edit-profile" element={<ProtectedRoute initialTab="edit-profile" />} />
 
-            {/* Catch-all: Redirect to Home / Login */}
+            {/* Catch-all: Redirect to Home / Dashboard */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </div>

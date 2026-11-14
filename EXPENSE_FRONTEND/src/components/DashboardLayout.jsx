@@ -224,6 +224,9 @@ export const DashboardLayout = ({ initialTab = 'dashboard' }) => {
         console.warn('Backend logout failed, proceeding locally:', err);
       }
       localStorage.removeItem('expense_token');
+      localStorage.removeItem('expense_user');
+      localStorage.removeItem('is_logged_in');
+      localStorage.removeItem('expense_items');
       navigate('/login', {
         state: { message: 'Logged out successfully.' },
       });

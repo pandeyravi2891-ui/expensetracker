@@ -125,6 +125,10 @@ export const OtpVerifyCard = ({
           bio: data.user?.bio || ''
         };
         localStorage.setItem('expense_user', JSON.stringify(userObj));
+        localStorage.setItem('is_logged_in', 'true');
+        if (data.token) {
+          localStorage.setItem('expense_token', data.token);
+        }
 
         setFeedback({
           type: 'success',
