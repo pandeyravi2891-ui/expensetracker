@@ -1,8 +1,11 @@
 const Expense = require("../Models/expenseschema");
+const { getUserFromReq } = require("../middleware/auth");
 
 const fetchexpense = async(req,res) =>{
     try{
-        const email = req.query.email || req.body?.email;
+        // 1. Read user from cookie (via cookie-parser), or fallback to query/body
+        const authUser = getUserFromReq(req);
+        const email = authUser?.email || req.query.email || req.body?.email;
 
         if(!email){
             return res.status(400).json({

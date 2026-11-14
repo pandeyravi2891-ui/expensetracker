@@ -89,6 +89,7 @@ export const ResetOtpVerifyCard = () => {
       const API_URL = import.meta.env.VITE_API_URL;
       const response = await fetch(`${API_URL}/api/v1/resetotp_verify`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           entered_otp: fullOtp,
@@ -124,6 +125,7 @@ export const ResetOtpVerifyCard = () => {
       const API_URL = import.meta.env.VITE_API_URL;
       const response = await fetch(`${API_URL}/api/v1/resend_otp`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });

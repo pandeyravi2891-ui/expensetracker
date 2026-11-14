@@ -37,6 +37,7 @@ export const ResetPasswordCard = () => {
       const API_URL = import.meta.env.VITE_API_URL;
       const response = await fetch(`${API_URL}/api/v1/resetpass`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: email,

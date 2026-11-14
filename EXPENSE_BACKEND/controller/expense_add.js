@@ -1,8 +1,12 @@
 const Expense = require("../Models/expenseschema");
+const { getUserFromReq } = require("../middleware/auth");
 
 const expenseadd = async(req,res) =>{
     try{
-        const {email,amount,category,date,description} = req.body;
+        // 1. Read user from cookie (via cookie-parser), or fallback to request body
+        const authUser = getUserFromReq(req);
+        const { amount, category, date, description } = req.body;
+        const email = authUser?.email || req.body?.email;
 
         if(!email || !amount || !category || !date){
             return res.status(400).json({

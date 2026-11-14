@@ -77,7 +77,9 @@ export const DashboardLayout = ({ initialTab = 'dashboard' }) => {
       try {
         const API_URL = import.meta.env.VITE_API_URL;
         const emailToFetch = user?.email || '';
-        const response = await fetch(`${API_URL}/api/v1/get-profile?email=${encodeURIComponent(emailToFetch)}`);
+        const response = await fetch(`${API_URL}/api/v1/get-profile?email=${encodeURIComponent(emailToFetch)}`, {
+          credentials: 'include'
+        });
         const data = await response.json();
         if (response.ok && data.success && data.user) {
           setUser((prev) => {
@@ -107,7 +109,9 @@ export const DashboardLayout = ({ initialTab = 'dashboard' }) => {
 
       try {
         const API_URL = import.meta.env.VITE_API_URL;
-        const response = await fetch(`${API_URL}/api/v1/fetch_expense?email=${encodeURIComponent(currentEmail)}`);
+        const response = await fetch(`${API_URL}/api/v1/fetch_expense?email=${encodeURIComponent(currentEmail)}`, {
+          credentials: 'include'
+        });
         const data = await response.json();
         if (response.ok && data.success && Array.isArray(data.expenses)) {
           // Keep only expenses that strictly match the current user's email
@@ -133,6 +137,7 @@ export const DashboardLayout = ({ initialTab = 'dashboard' }) => {
         const API_URL = import.meta.env.VITE_API_URL;
         await fetch(`${API_URL}/api/v1/expense/${id}`, {
           method: 'PUT',
+          credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ amount, category, date, description }),
         });
@@ -157,6 +162,7 @@ export const DashboardLayout = ({ initialTab = 'dashboard' }) => {
         const API_URL = import.meta.env.VITE_API_URL;
         const response = await fetch(`${API_URL}/api/v1/expense_add`, {
           method: 'POST',
+          credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: currentEmail,
@@ -196,6 +202,7 @@ export const DashboardLayout = ({ initialTab = 'dashboard' }) => {
       const API_URL = import.meta.env.VITE_API_URL;
       await fetch(`${API_URL}/api/v1/expense/${id}`, {
         method: 'DELETE',
+        credentials: 'include',
       });
     } catch (err) {
       console.warn('Backend delete failed, deleting locally:', err);
@@ -205,8 +212,17 @@ export const DashboardLayout = ({ initialTab = 'dashboard' }) => {
   };
 
   // Handle Logout
-  const handleLogout = () => {
+  const handleLogout = async () => {
     if (window.confirm('Do you really want to logout?')) {
+      try {
+        const API_URL = import.meta.env.VITE_API_URL;
+        await fetch(`${API_URL}/api/v1/logout`, {
+          method: 'POST',
+          credentials: 'include',
+        });
+      } catch (err) {
+        console.warn('Backend logout failed, proceeding locally:', err);
+      }
       localStorage.removeItem('expense_token');
       navigate('/login', {
         state: { message: 'Logged out successfully.' },

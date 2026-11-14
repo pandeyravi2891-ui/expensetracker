@@ -1,10 +1,12 @@
 const User = require("../Models/userschema");
 const Expense = require("../Models/expenseschema");
 const OTP = require("../Models/otpschema"); 
+const { getUserFromReq } = require("../middleware/auth");
 
 const deleteAccount = async (req, res) => {
     try {
-        const email = req.body?.email || req.query?.email;
+        const authUser = getUserFromReq(req);
+        const email = authUser?.email || req.body?.email || req.query?.email;
 
         if (!email) {
             return res.status(400).json({
@@ -29,6 +31,13 @@ const deleteAccount = async (req, res) => {
         await User.findOneAndDelete({ email });
         await OTP.deleteMany({ email });
         await Expense.deleteMany({ email });
+
+        // Clear the authentication cookie
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+        });
 
         return res.status(200).json({
             success: true,

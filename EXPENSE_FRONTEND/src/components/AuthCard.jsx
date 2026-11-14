@@ -108,6 +108,7 @@ export const AuthCard = ({
         const API_URL = import.meta.env.VITE_API_URL;
         const response = await fetch(`${API_URL}/api/v1/user`, {
           method: 'POST',
+          credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             firstName: firstName.trim(),
@@ -141,6 +142,7 @@ export const AuthCard = ({
         const API_URL = import.meta.env.VITE_API_URL;
         const response = await fetch(`${API_URL}/api/v1/login`, {
           method: 'POST',
+          credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email,

@@ -101,6 +101,7 @@ export const EditProfileView = ({ user = null, onBack, onSave }) => {
       const API_URL = import.meta.env.VITE_API_URL;
       const response = await fetch(`${API_URL}/api/v1/upload-profile`, {
         method: 'POST',
+        credentials: 'include',
         body: formData,
       });
 
@@ -159,6 +160,7 @@ export const EditProfileView = ({ user = null, onBack, onSave }) => {
       const API_URL = import.meta.env.VITE_API_URL;
       const response = await fetch(`${API_URL}/api/v1/update-profile`, {
         method: 'POST',
+        credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email: email.trim(),

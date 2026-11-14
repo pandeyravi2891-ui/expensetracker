@@ -5,6 +5,8 @@ const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 
+const JWT_SECRET = process.env.JWT_SECRET || "expense_tracker_jwt_secret_key_2026";
+
 
 const user = async(req,res) =>{
     try{
@@ -125,15 +127,15 @@ const login = async(req,res) =>{
 
         const token = jwt.sign(
             { id: record._id, email: record.email },
-            process.env.JWT_SECRET,
-            { expiresIn: "1d" }
+            JWT_SECRET,
+            { expiresIn: "7d" }
         );
 
         res.cookie("token", token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            maxAge: 24 * 60 * 60 * 1000
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 7 * 24 * 60 * 60 * 1000
         });
 
         await User.findOneAndUpdate({ email: record.email }, { token }, { new: true });
@@ -141,6 +143,7 @@ const login = async(req,res) =>{
         return res.status(200).json({
             success: true,
             message: "Login Successfully.",
+            token,
             user: {
                 firstName: record.firstName,
                 lastName: record.lastName,
@@ -158,4 +161,25 @@ const login = async(req,res) =>{
     }
 }
 
-module.exports = {user,login};
+const logout = async (req, res) => {
+    try {
+        // Clear cookie set by cookie-parser
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: "Logged out successfully"
+        });
+    } catch (err) {
+        return res.status(500).json({
+            success: false,
+            message: err.message
+        });
+    }
+};
+
+module.exports = { user, login, logout };

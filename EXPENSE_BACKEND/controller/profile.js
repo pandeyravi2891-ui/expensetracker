@@ -1,23 +1,36 @@
 require("dotenv").config();
 const User = require("../Models/userschema");
 const cloudinary = require("../Config/cloudinary");
+const { getUserFromReq } = require("../middleware/auth");
 
-// Smart user resolver: guaranteed to find or link to active user
-async function resolveUser(email) {
+// Smart user resolver: checks cookies (via cookie-parser) first, then email param, then fallback
+async function resolveUser(email, req = null) {
+    // 1. Try to get email or id from cookie-parser (req.cookies.token)
+    if (req) {
+        const authUser = getUserFromReq(req);
+        if (authUser?.id) {
+            const userById = await User.findById(authUser.id);
+            if (userById) return userById;
+        }
+        if (authUser?.email && !email) {
+            email = authUser.email;
+        }
+    }
+
     if (email && typeof email === 'string' && email.trim()) {
         const trimmed = email.trim();
-        // 1. Try case-insensitive email match
+        // 2. Try case-insensitive email match
         let user = await User.findOne({
             email: { $regex: new RegExp(`^${trimmed.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`, 'i') }
         });
         if (user) return user;
     }
 
-    // 2. Fallback: find the most recently created / active user in MongoDB
+    // 3. Fallback: find the most recently created / active user in MongoDB
     const recentUser = await User.findOne().sort({ _id: -1 });
     if (recentUser) return recentUser;
 
-    // 3. If no user exists in DB at all, create one
+    // 4. If no user exists in DB at all, create one
     const defaultEmail = email && typeof email === 'string' && email.trim() ? email.trim() : "ravi.pandey@example.com";
     return await User.create({
         firstName: "Ravi",
@@ -40,7 +53,7 @@ exports.uploadProfileImage = async (req, res) => {
         }
 
         const email = req.body?.email || req.query?.email;
-        const user = await resolveUser(email);
+        const user = await resolveUser(email, req);
 
         let imageUrl = "";
 
@@ -124,7 +137,7 @@ exports.uploadProfileImage = async (req, res) => {
 exports.updateProfile = async (req, res) => {
     try {
         const { email, name, bio, profileImage } = req.body;
-        const user = await resolveUser(email);
+        const user = await resolveUser(email, req);
 
         if (name && typeof name === 'string' && name.trim()) {
             const parts = name.trim().split(" ");
@@ -176,7 +189,7 @@ exports.updateProfile = async (req, res) => {
 exports.getProfile = async (req, res) => {
     try {
         const email = req.query?.email || req.body?.email;
-        const user = await resolveUser(email);
+        const user = await resolveUser(email, req);
 
         return res.status(200).json({
             success: true,
