@@ -70,7 +70,7 @@ const user = async(req,res) =>{
             password : hashedPassword,
         })
 
-        sendMail({
+        await sendMail({
             email,
             otp
         }) 
