@@ -49,7 +49,6 @@ const otpverify = async (req, res) => {
             lastName: record.lastName,
             email: record.email,
             password: record.password,
-            confirm_password: record.confirm_password,
             profileImage: "",
             bio: ""
         });

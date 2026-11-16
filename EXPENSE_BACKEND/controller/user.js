@@ -68,8 +68,6 @@ const user = async(req,res) =>{
             firstName,
             lastName,
             password : hashedPassword,
-            confirm_password : hashedconfirm_password,
-            token
         })
 
         sendMail({

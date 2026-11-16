@@ -36,11 +36,6 @@ const otp = new mongoose.Schema({
         required : true,
     },
 
-    confirm_password : {
-        type : String,
-        required : true,
-    },
-
     token : {
         type : String
     }
