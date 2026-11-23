@@ -27,5 +27,8 @@
     "nodemon": "^3.1.14",
     "otp-generator": "^4.0.1",
     "router": "^2.2.0"
+  },
+  "allowScripts": {
+    "bcrypt@6.0.0": true
   }
 }
