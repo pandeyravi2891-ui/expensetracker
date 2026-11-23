@@ -1,14 +1,24 @@
 const mongoose = require("mongoose");
 
-require("dotenv").config();
+let connectionPromise = null;
 
-exports.connect = async() => {
-    try{
-        await mongoose.connect(process.env.MONGODB_URL);
-        console.log("Database connected successfully");
-    }catch(err){
-        console.log("Database connection failed:",err);
-        process.exit(1);
+exports.connect = async () => {
+    if (mongoose.connection.readyState === 1) {
+        return mongoose.connection;
     }
-}
 
+    if (!process.env.MONGODB_URL) {
+        throw new Error("MONGODB_URL is missing");
+    }
+
+    if (!connectionPromise) {
+        connectionPromise = mongoose.connect(
+            process.env.MONGODB_URL
+        ).catch((err) => {
+            connectionPromise = null;
+            throw err;
+        });
+    }
+
+    return connectionPromise;
+};
