@@ -41,7 +41,7 @@ const otp = new mongoose.Schema({
     },
 
     attempts :{
-        type : number,
+        type : Number,
         default : 0
     }
 })
