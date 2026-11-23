@@ -1,6 +1,6 @@
 const ratelimit = require("express-rate-limit");
 
-const loginlimiter = rateLimit({
+const loginlimiter = ratelimit({
     windowsMs : 15*60*1000,
     limits : 5,
     message:{
@@ -11,7 +11,7 @@ const loginlimiter = rateLimit({
     legacyHeaders: false
 });
 
-const signuplimiter = rateLimit({
+const signuplimiter = ratelimit({
     windowsMs : 60*60*1000,
     limits : 5,
     message:{
