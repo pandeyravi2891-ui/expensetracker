@@ -38,6 +38,11 @@ const otp = new mongoose.Schema({
 
     token : {
         type : String
+    },
+
+    attempts :{
+        type : number,
+        default : 0
     }
 })
 

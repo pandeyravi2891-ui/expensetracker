@@ -25,6 +25,13 @@ const otpverify = async (req, res) => {
             });
         }
 
+        if(record.attempts>=3){
+            return res.status(400).json({
+                success: false,
+                message: "Too many attempts. OTP has expired."
+            })
+        }
+
         if (record.expires_at < new Date()) {
             return res.status(400).json({
                 success: false,
@@ -38,9 +45,11 @@ const otpverify = async (req, res) => {
         );
 
         if (!isMatch) {
+            record.attempts++;
+            await record.save();
             return res.status(400).json({
                 success: false,
-                message: "Invalid OTP"
+                message: `Invalid OTP. ${3 - record.attempts} attempts remaining`
             });
         }
 

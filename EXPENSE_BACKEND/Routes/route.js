@@ -15,10 +15,12 @@ const upload = require("../middleware/upload");
 const { uploadProfileImage, updateProfile, getProfile } = require("../controller/profile");
 const { auth } = require("../middleware/auth");
 
+const {loginlimiter,signuplimiter} = require("../middleware/ratelimiter");
 
-router.post("/user",user);
+
+router.post("/user",signuplimiter,user);
 router.post("/otp_verify",otpverify);
-router.post("/login",login);
+router.post("/login",loginlimiter,login);
 router.post("/logout",logout);
 router.get("/logout",logout);
 router.get("/check-auth",checkAuth);
