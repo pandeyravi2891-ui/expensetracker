@@ -43,6 +43,21 @@ const otp = new mongoose.Schema({
     attempts :{
         type : Number,
         default : 0
+    },
+
+    blocked_time : {
+        type: Date,
+        default : null
+    },
+
+    resend_counter :{
+        type : Number,
+        default : 0
+    },
+
+    resend_block : {
+        type : Date,
+        default : null
     }
 })
 

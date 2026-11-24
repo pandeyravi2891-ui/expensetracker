@@ -25,11 +25,12 @@ const otpverify = async (req, res) => {
             });
         }
 
-        if(record.attempts>=3){
-            return res.status(400).json({
+        if (record.blocked_time && record.blocked_time > new Date()) {
+            const remaining_time = Math.ceil((record.blocked_time - new Date()) / 60000);
+            return res.status(403).json({
                 success: false,
-                message: "Too many attempts. OTP has expired."
-            })
+                message: `Too many attempts. Please try after ${remaining_time} minutes.`
+            });
         }
 
         if (record.expires_at < new Date()) {
@@ -46,10 +47,27 @@ const otpverify = async (req, res) => {
 
         if (!isMatch) {
             record.attempts++;
+
+            if (record.attempts >= 3) {
+                record.blocked_time = new Date(
+                    Date.now() + 15 * 60 * 1000
+                );
+
+                record.expires_at = new Date(0);
+
+                await record.save();
+
+                return res.status(403).json({
+                    success: false,
+                    message: "Too many attempts. Try again after 15 minutes."
+                });
+            }
+
             await record.save();
+
             return res.status(400).json({
                 success: false,
-                message: `Invalid OTP. ${3 - record.attempts} attempts remaining`
+                message: `Invalid OTP. ${3 - record.attempts} attempts remaining.`
             });
         }
 

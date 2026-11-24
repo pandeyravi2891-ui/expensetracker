@@ -8,105 +8,128 @@ const jwt = require("jsonwebtoken");
 const JWT_SECRET = process.env.JWT_SECRET || "expense_tracker_jwt_secret_key_2026";
 
 
-const user = async(req,res) =>{
-    try{
-        const {firstName , lastName , email , password , confirm_password} = req.body;
+const user = async (req, res) => {
+    try {
+        const { firstName, lastName, email, password, confirm_password } = req.body;
 
-        if(!firstName || !lastName || !email || !password || !confirm_password){
+        if (!firstName || !lastName || !email || !password || !confirm_password) {
             return res.status(400).json({
-                success : false,
-                message : "All fields are required.",
+                success: false,
+                message: "All fields are required.",
             })
         }
 
-        const record = await User.findOne({email});
+        const record = await User.findOne({ email });
 
-        if(record){
+        if (record) {
             return res.status(400).json({
-                success : false,
-                message : "User already exist."
+                success: false,
+                message: "User already exist."
             })
         }
 
-        if(password != confirm_password){
+        if (password.length < 8) {
             return res.status(400).json({
-                success : false,
-                message : "Password and Confirm password do not match."
+                success: false,
+                message: "Password must be at least 8 characters."
+            })
+        } else if (!/[A-Z]/.test(password)) {
+            return res.status(400).json({
+                success: false,
+                message: "At least one uppercase letter required."
+            })
+        } else if (!/[a-z]/.test(password)) {
+            return res.status(400).json({
+                success: false,
+                message: "At least one lowercase letter required.",
+            })
+        } else if (!/[0-9]/.test(password)) {
+            return res.status(400).json({
+                success: false,
+                message: "At least one number required.",
+            })
+        } else if (!/[!@#$%^&*]/.test(password)) {
+            return res.status(400).json({
+                success: false,
+                message: "At least one special character required.",
             })
         }
 
-        const hashedPassword = await bcrypt.hash (password,10);
+        if (password !== confirm_password) {
+            return res.status(400).json({
+                success: false,
+                message: "Password and Confirm password do not match."
+            })
+        }
 
-        //     const token = jwt.sign(
-        //     { id: user._id, email: user.email },
-        //     process.env.JWT_SECRET,
-        //     { expiresIn: "1d" }
-        // );
-
-        // res.cookie("token", token, {
-        //     httpOnly: true,
-        //     secure: process.env.NODE_ENV === "production",
-        //     sameSite: "lax",
-        //     maxAge: 24 * 60 * 60 * 1000
-        // });
-
-       
+        const hashedPassword = await bcrypt.hash(password, 10);
 
         const otp = crypto.randomInt(100000, 1000000).toString();
-        const otpHash = await bcrypt.hash(otp,10);
+        const otpHash = await bcrypt.hash(otp, 10);
 
-        const otpdb = await OTP.find({email}); 
+        const otpdb = await OTP.findOne({ email });
 
-        if(otpdb){
-            await OTP.deleteMany({email});
+        if (otpdb?.blocked_time && otpdb.blocked_time > new Date()) {
+            const remaining_time = Math.ceil(
+                (otpdb.blocked_time - new Date()) / 1000
+            );
+
+            return res.status(403).json({
+                success: false,
+                message: `OTP is blocked for ${remaining_time} seconds.`
+            });
+        }
+
+        if (otpdb) {
+            await OTP.deleteMany({ email });
         }
 
         await OTP.create({
-            otpHash : otpHash,
-            email ,
-            expires_at: new Date(Date.now() + 1 * 60 * 1000),
+            otpHash: otpHash,
+            email,
+            expires_at: new Date(Date.now() + 5 * 60 * 1000),
             firstName,
             lastName,
-            password : hashedPassword,
+            password: hashedPassword,
         })
 
         await sendMail({
             email,
             otp
-        }) 
+        })
 
         return res.status(200).json({
-            success : true,
-            message : "user created successfully.",
+            success: true,
+            message: `OTP sent successfully on your mail. ${email}`,
         })
-    }catch(err){
-        console.log("error in user controller.",err);
+    } catch (err) {
+        console.log("error in user controller.", err);
 
         return res.status(500).json({
-            success : false,
-            message : err.message,
+            success: false,
+            message: err.message,
         })
     }
 }
 
-const login = async(req,res) =>{
-    try{
+const login = async (req, res) => {
+    try {
 
-        const {email,password} = req.body;
+        const { email, password } = req.body;
 
-        if(!email || !password){
+        if (!email || !password) {
             return res.status(400).json({
-                success : false,
-                message : "All fields are required."
+                success: false,
+                message: "All fields are required."
             })
         }
 
-        const record = await User.findOne({email});
+        const record = await User.findOne({ email });
 
-        if(!record){
+        if (!record) {
             return res.status(400).json({
-                success : false,
-                message : "User Not Found."
+                success: false,
+                message: "User Not Found."
             })
         }
 
@@ -115,10 +138,10 @@ const login = async(req,res) =>{
             record.password
         )
 
-        if(!isMatch){
+        if (!isMatch) {
             return res.status(400).json({
-                success : false,
-                message : "Invalid password."
+                success: false,
+                message: "Invalid password."
             })
         }
 
@@ -150,10 +173,10 @@ const login = async(req,res) =>{
             }
         });
 
-    }catch(err){
+    } catch (err) {
         return res.status(500).json({
-            success : false,
-            message : err.message
+            success: false,
+            message: err.message
         })
     }
 }
@@ -192,7 +215,7 @@ const checkAuth = async (req, res) => {
         }
 
         const foundUser = (authUser.id ? await User.findById(authUser.id) : null) ||
-                          (authUser.email ? await User.findOne({ email: authUser.email }) : null);
+            (authUser.email ? await User.findOne({ email: authUser.email }) : null);
 
         if (!foundUser) {
             return res.status(401).json({
